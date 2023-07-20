@@ -1,6 +1,10 @@
 import 'package:book_store_app/constants/color_extenstion.dart';
+import 'package:book_store_app/view/account_screen/account_screen.dart';
 import 'package:book_store_app/view/home/home_screen.dart';
+import 'package:book_store_app/view/out_books/our_books_screen.dart';
+import 'package:book_store_app/view/search_scren/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MainTabView extends StatefulWidget {
   const MainTabView({super.key});
@@ -9,8 +13,12 @@ class MainTabView extends StatefulWidget {
   State<MainTabView> createState() => _MainTabViewState();
 }
 
+GlobalKey<ScaffoldState> sideMenuScaffoldKey = GlobalKey<ScaffoldState>();
+
 class _MainTabViewState extends State<MainTabView> with TickerProviderStateMixin {
   TabController? tabController;
+
+  int selectedMenu = 0;
 
   @override
   void initState() {
@@ -31,10 +39,117 @@ class _MainTabViewState extends State<MainTabView> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
+      key: sideMenuScaffoldKey,
+      endDrawer: Drawer(
+        elevation: 0, //removes the shadow effect
+        backgroundColor: Colors.transparent,
+        width: size.width * .75,
+        child: Container(
+          decoration: BoxDecoration(
+            color: TColor.drawerColor,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(size.width * .7),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const SizedBox(height: 80),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: menuArr.map((mObj) {
+                    var index = menuArr.indexOf(mObj);
+                    return Container(
+                      decoration: selectedMenu == index
+                          ? BoxDecoration(
+                              color: TColor.primary,
+                              boxShadow: [BoxShadow(color: TColor.primary, blurRadius: 10, offset: const Offset(0, 3))])
+                          : null,
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          setState(() {
+                            if (index == 1) {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const OurBooksScreen()));
+                              sideMenuScaffoldKey.currentState?.closeEndDrawer();
+                            }
+                            if (index == 7) {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const AccountScreen()));
+                              sideMenuScaffoldKey.currentState?.closeEndDrawer();
+                            }
+                            selectedMenu = index;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              mObj['name'].toString(),
+                              style: GoogleFonts.poppins(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                                color: selectedMenu == index ? Colors.white : TColor.text,
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Icon(
+                              mObj["icon"] as IconData? ?? Icons.home,
+                              color: selectedMenu == index ? Colors.white : TColor.primary,
+                              size: 33,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.settings,
+                          color: TColor.blackColor.withOpacity(.5),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Terms',
+                          style: GoogleFonts.poppins(
+                              fontSize: 15, fontWeight: FontWeight.w600, color: TColor.blackColor.withOpacity(.5)),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Privacy',
+                          style: GoogleFonts.poppins(
+                              fontSize: 15, fontWeight: FontWeight.w600, color: TColor.blackColor.withOpacity(.5)),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
       body: TabBarView(controller: tabController, children: [
         const HomeScreen(),
-        Container(),
+        const SearchScreen(),
         Container(),
         Container(),
       ]),

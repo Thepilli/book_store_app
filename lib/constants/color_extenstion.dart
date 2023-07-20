@@ -5,6 +5,7 @@ class TColor {
   static Color get primaryLight => const Color(0xffAFDFC7);
   static Color get text => const Color(0xff212121);
   static Color get subTitle => const Color(0xff212121).withOpacity(0.4);
+  static Color get drawerColor => const Color(0xffffffff).withOpacity(0.9);
 
   static Color get color1 => const Color(0xff1C4A7E);
   static Color get color2 => const Color(0xffC65135);
@@ -14,9 +15,13 @@ class TColor {
 
   static Color get textbox => const Color(0xffEFEFEF).withOpacity(0.6);
 
-  static List<Color> get button => const [
+  static List<Color> get primatyButton => const [
         Color(0xff5ABD8C),
         Color(0xff00FF81),
+      ];
+  static List<Color> get whiteButton => const [
+        Color(0xffffffff),
+        Color(0xFFF0F0F0),
       ];
 
   static List<Color> get searchBGColor => const [

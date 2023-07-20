@@ -5,6 +5,8 @@ import 'package:book_store_app/common_widgets/newsletter_footer.dart';
 import 'package:book_store_app/common_widgets/recently_viewed_box.dart';
 import 'package:book_store_app/common_widgets/top_picks_box.dart';
 import 'package:book_store_app/constants/color_extenstion.dart';
+import 'package:book_store_app/view/book_reading/book_reading_screen.dart';
+import 'package:book_store_app/view/main_tab/main_tab_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -107,7 +109,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           MyHeadline(headline: 'Our Top Picks'),
                         ],
                       ),
-                      actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.menu))],
+                      actions: [
+                        IconButton(
+                            onPressed: () {
+                              sideMenuScaffoldKey.currentState?.openEndDrawer();
+                            },
+                            icon: const Icon(Icons.menu))
+                      ],
                     ),
                     SizedBox(
                       width: size.width,
@@ -138,7 +146,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         itemCount: bestArr.length,
                         itemBuilder: (BuildContext context, int index) {
                           var iObj = bestArr[index] as Map? ?? {};
-                          return GestureDetector(onTap: () {}, child: BestsellersBox(iObj: iObj));
+                          return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookReadingScreen(iObj: iObj),
+                                    ));
+                              },
+                              child: BestsellersBox(iObj: iObj));
                         },
                       ),
                     ),
